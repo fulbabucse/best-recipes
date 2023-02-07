@@ -1,11 +1,23 @@
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { RouterProvider } from "react-router-dom";
 import "./App.css";
+import { setUser } from "./features/auth/authSlice";
+import auth from "./firebase/firebase.config";
+import routes from "./routes/routes";
 
 function App() {
-  return (
-    <div>
-      <h1>Real Estate</h1>
-    </div>
-  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(setUser(user?.email));
+      }
+    });
+  }, [dispatch]);
+
+  return <RouterProvider router={routes} />;
 }
 
 export default App;
