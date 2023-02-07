@@ -1,8 +1,11 @@
 import axios from "../../utils/axios.config";
 
-const fetchRecipes = async () => {
+export const fetchRecipes = async () => {
   const data = await axios.get(`/recipes`);
   return data.data;
 };
 
-export default fetchRecipes;
+export const fetchSingleRecipe = async (id) => {
+  const data = await axios.get(`/recipes/${id}`);
+  return data.data;
+};
