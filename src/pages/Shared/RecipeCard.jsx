@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   removeRecipe,
   saveRecipes,
@@ -8,11 +8,18 @@ import {
 
 const RecipeCard = ({ recipe }) => {
   const { _id, label, image, ingredientLines } = recipe;
+  const { email } = useSelector((state) => state.auth);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
 
   const handleSaveRecipe = (data) => {
     dispatch(saveRecipes(data));
+  };
+
+  const handleRemoveFromLocalStorage = (id) => {
+    const parsedItems = JSON.parse(localStorage.getItem("Recipes"));
+    const filterLocalStorage = parsedItems.filter((item) => item._id !== id);
+    localStorage.setItem("Recipes", JSON.stringify(filterLocalStorage));
   };
 
   return (
@@ -41,18 +48,35 @@ const RecipeCard = ({ recipe }) => {
           </Link>
           {pathname === "/dashboard" ? (
             <button
-              onClick={() => dispatch(removeRecipe(_id))}
+              onClick={() => {
+                dispatch(removeRecipe(_id));
+                handleRemoveFromLocalStorage(_id);
+              }}
               className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-3 py-1 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
             >
               Remove
             </button>
           ) : (
-            <button
-              onClick={() => handleSaveRecipe(recipe)}
-              className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-3 py-1 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
-            >
-              Save
-            </button>
+            <>
+              {email ? (
+                <>
+                  <button
+                    onClick={() => handleSaveRecipe(recipe)}
+                    className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-3 py-1 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+                  >
+                    Save
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/sign-in">
+                    <button className="border border-indigo-500 bg-indigo-500 text-white rounded-md px-3 py-1 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
+                      Save
+                    </button>
+                  </Link>
+                </>
+              )}
+            </>
           )}
         </div>
       </div>

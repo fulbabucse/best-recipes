@@ -6,7 +6,7 @@ import { BsFilter } from "react-icons/bs";
 import Spinner from "../../components/Spinner";
 
 const Home = () => {
-  const { recipes, isLoading } = useSelector((state) => state.recipes);
+  const { recipes, isLoading, error } = useSelector((state) => state.recipes);
   const [searchFilters, setSearchFilters] = useState(false);
   const [recipeText, setRecipeText] = useState("");
   const [categoryText, setCategoryText] = useState("");
@@ -22,7 +22,7 @@ const Home = () => {
   };
 
   return (
-    <div className="mt-6 px-4 lg:px-0">
+    <div className="mt-6 px-4 lg:px-0 min-h-screen">
       <div className="bg-gray-100 pt-4">
         <div className="text-center font-semibold text-xl text-gray-700 w-full pb-2">
           <button
@@ -92,9 +92,12 @@ const Home = () => {
         </div>
       ) : (
         <div>
-          <h1 className="text-center text-red-500 mt-10">No found records</h1>
+          {!isLoading && (
+            <h1 className="text-center text-red-500 mt-10">No found records</h1>
+          )}
         </div>
       )}
+      {error && <h1 className="text-center text-red-500 mt-10">{error}</h1>}
     </div>
   );
 };

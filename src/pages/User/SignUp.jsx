@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import loginImage from "../../assets/login.svg";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../features/auth/authSlice";
+
 const SignUp = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -13,7 +15,7 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
-  const { error } = useSelector((state) => state.auth);
+  const { error, email } = useSelector((state) => state.auth);
 
   const handleSignUp = (data) => {
     dispatch(createUser({ email: data.email, password: data.password }));
@@ -29,6 +31,12 @@ const SignUp = () => {
   ) {
     setError = "Password should be at least 6 characters";
   }
+
+  useEffect(() => {
+    if (email) {
+      return navigate("/");
+    }
+  }, [email, navigate]);
 
   return (
     <div className="my-6 lg:my-16">

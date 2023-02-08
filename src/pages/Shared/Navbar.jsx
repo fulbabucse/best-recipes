@@ -75,11 +75,14 @@ function Navbar() {
               <li className="text-gray-600 hover:text-blue-600">
                 <Link to="/">Home</Link>
               </li>
-              <li className="text-gray-600 hover:text-blue-600">
-                <Link to="/dashboard">Dashboard</Link>
-              </li>
+
               {email ? (
-                <button onClick={handleSignOut}>Sign Out</button>
+                <>
+                  <li className="text-gray-600 hover:text-blue-600">
+                    <Link to="/dashboard">Dashboard</Link>
+                  </li>
+                  <button onClick={handleSignOut}>Sign Out</button>
+                </>
               ) : (
                 <li className="text-gray-600 hover:text-blue-600">
                   <Link to="/sign-in">Sign In</Link>

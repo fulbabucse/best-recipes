@@ -8,7 +8,7 @@ import {
 import auth from "../../firebase/firebase.config";
 
 const initialState = {
-  isLoading: true,
+  isLoading: false,
   email: "",
   error: "",
 };

@@ -5,6 +5,7 @@ import Home from "../pages/Home/Home";
 import RecipeDetails from "../pages/Shared/RecipeDetails";
 import SignIn from "../pages/User/SignIn";
 import SignUp from "../pages/User/SignUp";
+import PrivateRoute from "./PrivateRoute";
 
 const routes = createBrowserRouter([
   {
@@ -15,7 +16,14 @@ const routes = createBrowserRouter([
       { path: "/home", element: <Home /> },
       { path: "/sign-in", element: <SignIn /> },
       { path: "/sign-up", element: <SignUp /> },
-      { path: "/dashboard", element: <Dashboard /> },
+      {
+        path: "/dashboard",
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
+      },
       { path: "/recipe/:id", element: <RecipeDetails /> },
     ],
   },
