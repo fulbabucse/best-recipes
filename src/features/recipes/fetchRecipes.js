@@ -1,7 +1,7 @@
 import axios from "../../utils/axios.config";
 
-export const fetchRecipes = async () => {
-  const data = await axios.get(`/recipes`);
+export const fetchRecipes = async (name) => {
+  const data = await axios.get(`/recipes?name=${name}`);
   return data.data;
 };
 

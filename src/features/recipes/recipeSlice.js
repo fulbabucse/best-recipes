@@ -8,10 +8,13 @@ const initialState = {
   recipe: {},
 };
 
-export const getRecipes = createAsyncThunk("recipes/getRecipes", async () => {
-  const data = fetchRecipes();
-  return data;
-});
+export const getRecipes = createAsyncThunk(
+  "recipes/getRecipes",
+  async ({ name }) => {
+    const data = fetchRecipes(name);
+    return data;
+  }
+);
 
 export const getSingleRecipe = createAsyncThunk(
   "recipes/getSingleRecipe",
@@ -37,7 +40,7 @@ const recipeSlice = createSlice({
         state.error = "";
       })
       .addCase(getRecipes.rejected, (state, { error }) => {
-        state.isLoading = true;
+        state.isLoading = false;
         state.recipes = [];
         state.error = error.message;
       })

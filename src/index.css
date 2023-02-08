@@ -113,7 +113,7 @@ code {
   height: 200px;
   display: inline-block;
   overflow: hidden;
-  background: #fff;
+  background: transparent;
 }
 .loading-bar {
   width: 100%;

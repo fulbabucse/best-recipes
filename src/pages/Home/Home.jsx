@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import Spinner from "../../components/Spinner";
 import { getRecipes } from "../../features/recipes/recipeSlice";
 import RecipeCard from "../Shared/RecipeCard";
+import { BsFilter } from "react-icons/bs";
+import Spinner from "../../components/Spinner";
 
 const Home = () => {
-  const { isLoading, recipes } = useSelector((state) => state.recipes);
+  const { recipes, isLoading } = useSelector((state) => state.recipes);
   const [searchFilters, setSearchFilters] = useState(false);
-
-  const { register, handleSubmit } = useForm();
+  const [recipeText, setRecipeText] = useState("");
+  const [categoryText, setCategoryText] = useState("");
 
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(getRecipes());
-  }, [dispatch]);
+    dispatch(getRecipes({ name: recipeText }));
+  }, [dispatch, recipeText]);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  const handleSearchRecipe = (data) => {
-    console.log(data);
+  const handleSearchRecipe = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -30,58 +27,73 @@ const Home = () => {
         <div className="text-center font-semibold text-xl text-gray-700 w-full pb-2">
           <button
             onClick={() => setSearchFilters((filters) => !filters)}
-            className="w-full pb-2"
+            className="w-full pb-2 flex items-center justify-center gap-1"
           >
-            Search Recipe by Filters
+            <span>Search Recipe by Filters</span> <BsFilter />
           </button>
         </div>
         {searchFilters && (
           <form
-            onSubmit={handleSubmit(handleSearchRecipe)}
+            onSubmit={() => handleSearchRecipe()}
             className="w-full py-5 px-5 border-t border-t-gray-300"
           >
-            <div className="flex flex-wrap space-y-2 lg:space-y-0">
+            <div className="flex flex-wrap justify-center space-y-2 lg:space-y-0">
               <div className="w-full md:w-1/3 px-3">
-                <input
-                  {...register("category_name")}
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  type="text"
-                  placeholder="Category name"
-                />
+                <select
+                  onClick={(e) => setCategoryText(e.target.value)}
+                  name="category_name"
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                >
+                  <option value="chicken">Chicken</option>
+                  <option value="pasta">Pasta</option>
+                  <option value="fish">Fish</option>
+                  <option value="beef">Beef</option>
+                  <option value="dessert">Desserts</option>
+                  <option value="vegetarian">Vegetarian</option>
+                </select>
               </div>
               <div className="w-full md:w-1/3 px-3">
                 <input
-                  {...register("recipe_name")}
+                  onChange={(e) => setRecipeText(e.target.value)}
+                  name="recipe_name"
                   className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   type="text"
                   placeholder="Recipe name"
                 />
               </div>
-              <div className="w-full md:w-1/3 px-3">
-                <input
-                  {...register("ingredient_name")}
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  type="text"
-                  placeholder="Ingredient name"
-                />
+              <div>
+                <button
+                  type="reset"
+                  className="bg-purple-200 text-gray-700 border border-purple-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-purple-500 focus:border-purple-500 focus:text-white"
+                >
+                  Clear Filter
+                </button>
               </div>
-            </div>
-            <div className="text-center mt-4">
-              <button
-                type="submit"
-                className="bg-purple-200 text-gray-700 border border-purple-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-purple-500 focus:border-purple-500 focus:text-white"
-              >
-                Submit
-              </button>
             </div>
           </form>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
-        {recipes?.map((recipe) => (
-          <RecipeCard key={recipe?._id} recipe={recipe} />
-        ))}
-      </div>
+
+      {isLoading && <Spinner />}
+      {recipes?.length ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-5">
+          {recipes
+            ?.filter((recipe) => {
+              if (categoryText.length) {
+                return categoryText === recipe.category;
+              }
+              return recipe;
+            })
+            ?.map((recipe) => (
+              <RecipeCard key={recipe?._id} recipe={recipe} />
+            ))}
+        </div>
+      ) : (
+        <div>
+          <h1 className="text-center text-red-500 mt-10">No found records</h1>
+        </div>
+      )}
     </div>
   );
 };

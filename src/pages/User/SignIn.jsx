@@ -104,13 +104,6 @@ const SignIn = () => {
               Sign In
             </button>
           </form>
-          <div className="flex justify-between items-center mt-3">
-            <Link to="/forget-password">
-              <button className="text-purple-600 hover:text-purple-700 focus:text-purple-700 active:text-purple-800 duration-200 transition ease-in-out">
-                Forgot password?
-              </button>
-            </Link>
-          </div>
 
           <p className="text-sm text-red-500 text-center">{setError}</p>
           <div>

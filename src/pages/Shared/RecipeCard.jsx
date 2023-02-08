@@ -2,30 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const RecipeCard = ({ recipe }) => {
-  const {
-    _id,
-    category,
-    uri,
-    label,
-    image,
-    source,
-    url,
-    shareAs,
-    dietLabels,
-    healthLabels,
-    cautions,
-    ingredientLines,
-    ingredients,
-    colories,
-    totalWeight,
-    totalTime,
-    cuisineType,
-    mealType,
-    dishType,
-  } = recipe;
+  const { _id, label, image, ingredientLines } = recipe;
   return (
     <Link to={`/recipe/${_id}`}>
-      <div className="max-w-sm rounded overflow-hidden shadow-lg">
+      <div className="max-w-sm rounded overflow-hidden shadow-lg h-full">
         <img className="w-full" src={image} alt={label} />
         <div className="px-6 py-4">
           <div className="font-medium text-lg">
